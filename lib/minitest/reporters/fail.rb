@@ -30,15 +30,30 @@ module Minitest
 
       def initialize(opts = {})
         @emoji = EMOJI.merge(opts.fetch(:emoji, {}))
+        init_counts
+        init_suite_counts
+      end
+
+      def init_suite_counts
+        @suites_test_count = 0
+        @suites_results = {
+            'P' => 0,
+            'E' => 0,
+            'F' => 0,
+            'S' => 0 }
+      end
+
+      def init_counts
+        @tests_count = 0
+        @results = {
+            'P' => 0,
+            'E' => 0,
+            'F' => 0,
+            'S' => 0 }
       end
 
       def before_suites(suite, type)
-        @suites_test_count = 0
-        @suites_results = {
-          'P' => 0,
-          'E' => 0,
-          'F' => 0,
-          'S' => 0 }
+        init_suite_counts
       end
 
       def after_suites(suites, type)
@@ -50,12 +65,7 @@ module Minitest
       end
 
       def before_suite(suite)
-        @test_count = 0
-        @results = {
-          'P' => 0,
-          'E' => 0,
-          'F' => 0,
-          'S' => 0 }
+        init_counts
       end
 
       def after_suite(suite)
