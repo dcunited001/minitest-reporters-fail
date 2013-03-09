@@ -59,10 +59,10 @@ module Minitest
       end
 
       def after_suite(suite)
-        if test_count > 1
+        if @test_count > 1
           @suites_results.each_key { |k| @suites_results[k] += @results[k] }
 
-          puts "#{test_count} Tests - #{suite}"
+          puts "#{@test_count} Tests - #{suite}"
           %w(P E F S).each do |status|
             print("#{@emoji[status]} => " + @emoji[status]*@results[status] + " #{@results[status]}")
             puts;
