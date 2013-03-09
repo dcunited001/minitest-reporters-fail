@@ -41,7 +41,7 @@ module Minitest
       end
 
       def init_counts
-        @tests_count = 0
+        @test_count = 0
         @results = {
             'P' => 0,
             'E' => 0,
