@@ -1,5 +1,6 @@
 #require 'minitest/unit'
-#require 'minitest/reporters'
+require 'ansi/code'
+require 'minitest/reporters'
 
 module Minitest
   module Reporters
@@ -13,9 +14,12 @@ module Minitest
     # @see https://github.com/tenderlove/minitest-emoji
     # @see https://github.com/CapnKernul/minitest-reporters
     class FailReporter
-      #include Reporter
-      #include ANSI::Code
-      #include RelativePosition
+      # hmmm, when using bundler to require from source,
+      #   fully qualified namespace is required, with ::
+      #   and require 'ansi/code' is needed
+      include ::Minitest::Reporter
+      include ::ANSI::Code
+      include ::Minitest::RelativePosition
 
       EMOJI = {
           'P' => "\u{1F49A} ", # heart
@@ -26,30 +30,26 @@ module Minitest
 
       def initialize(opts = {})
         @emoji = EMOJI.merge(opts.fetch(:emoji, {}))
-      end
 
-      def before_suites(suite, type)
         @results = {
             'P' => 0,
             'E' => 0,
             'F' => 0,
-            'S' => 0
-        }
+            'S' => 0}
       end
 
+      def before_suites(suite, type); end
       def after_suites(suites, type)
         %w(P E F S).each do |status|
-          print("#{status}: " + @emoji[status]*@results[status] + " #{@results[status]}")
+          print("#{@emoji[status]} => " + @emoji[status]*@results[status] + " #{@results[status]}")
           puts;
         end
       end
 
       def before_suite(suite); end
       def after_suite(suite); end
-
-      def before_test(suite,test)
-        #print pad_test(test)
-      end
+      def before_test(suite,test); end
+      def after_test(suite,test); end
 
       def pass(suite, test, test_runner)
         @results['P'] += 1
@@ -83,6 +83,13 @@ module Minitest
       def print_time(test)
         total_time = Time.now - (runner.test_start_time || Time.now)
         " (%.2fs)" % total_time
+      end
+
+      def print_info(e)
+        e.message.each_line { |line| print_with_info_padding(line) }
+
+        trace = filter_backtrace(e.backtrace)
+        trace.each { |line| print_with_info_padding(line) }
       end
 
     end
