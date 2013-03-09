@@ -42,7 +42,7 @@ module Minitest
       end
 
       def after_suites(suites, type)
-        puts "TOTALS:"
+        puts "FINISHED - #{@suites_test_count} tests ran"
         %w(P E F S).each do |status|
           print("#{@emoji[status]} => " + @emoji[status]*@suites_results[status] + " #{@suites_results[status]}")
           puts;
