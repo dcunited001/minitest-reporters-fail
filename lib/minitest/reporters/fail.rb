@@ -30,24 +30,42 @@ module Minitest
 
       def initialize(opts = {})
         @emoji = EMOJI.merge(opts.fetch(:emoji, {}))
-
-        @results = {
-            'P' => 0,
-            'E' => 0,
-            'F' => 0,
-            'S' => 0}
       end
 
-      def before_suites(suite, type); end
+      def before_suites(suite, type)
+        @suites_results = {
+          'P' => 0,
+          'E' => 0,
+          'F' => 0,
+          'S' => 0 }
+      end
+
       def after_suites(suites, type)
+        puts "TOTALS:"
+        %w(P E F S).each do |status|
+          print("#{@emoji[status]} => " + @emoji[status]*@suites_results[status] + " #{@suites_results[status]}")
+          puts;
+        end
+      end
+
+      def before_suite(suite)
+        @results = {
+          'P' => 0,
+          'E' => 0,
+          'F' => 0,
+          'S' => 0 }
+      end
+
+      def after_suite(suite)
+        @suites_results.each_key { |k| @suites_results[k] += @results[k] }
+
+        puts "TOTALS(#{suite})"
         %w(P E F S).each do |status|
           print("#{@emoji[status]} => " + @emoji[status]*@results[status] + " #{@results[status]}")
           puts;
         end
       end
 
-      def before_suite(suite); end
-      def after_suite(suite); end
       def before_test(suite,test); end
       def after_test(suite,test); end
 
