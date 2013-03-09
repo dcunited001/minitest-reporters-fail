@@ -77,7 +77,16 @@ module Minitest
         end
       end
 
-      def before_test(suite,test); end
+      def before_test(suite,test)
+        #FIX_FOR_ZEUS!! (which seems to want to run tests twice)
+        #  on the second run,
+        #    these are still nil,
+        #    for some reason
+        #  oh i wish i knew why!
+        @test_count ||= 0
+        @suite_test_count ||= 0
+      end
+
       def after_test(suite,test)
         @test_count += 1
         @suite_test_count += 1
