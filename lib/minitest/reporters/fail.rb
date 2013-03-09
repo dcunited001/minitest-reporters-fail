@@ -33,6 +33,7 @@ module Minitest
       end
 
       def before_suites(suite, type)
+        @suites_test_count = 0
         @suites_results = {
           'P' => 0,
           'E' => 0,
@@ -49,6 +50,7 @@ module Minitest
       end
 
       def before_suite(suite)
+        @test_count = 0
         @results = {
           'P' => 0,
           'E' => 0,
@@ -57,17 +59,22 @@ module Minitest
       end
 
       def after_suite(suite)
-        @suites_results.each_key { |k| @suites_results[k] += @results[k] }
+        if test_count > 1
+          @suites_results.each_key { |k| @suites_results[k] += @results[k] }
 
-        puts "TOTALS(#{suite})"
-        %w(P E F S).each do |status|
-          print("#{@emoji[status]} => " + @emoji[status]*@results[status] + " #{@results[status]}")
-          puts;
+          puts "#{test_count} Tests - #{suite}"
+          %w(P E F S).each do |status|
+            print("#{@emoji[status]} => " + @emoji[status]*@results[status] + " #{@results[status]}")
+            puts;
+          end
         end
       end
 
       def before_test(suite,test); end
-      def after_test(suite,test); end
+      def after_test(suite,test)
+        @test_count += 1
+        @suite_test_count += 1
+      end
 
       def pass(suite, test, test_runner)
         @results['P'] += 1
