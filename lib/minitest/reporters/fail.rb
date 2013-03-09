@@ -4,9 +4,6 @@ require 'minitest/reporters'
 
 module Minitest
   module Reporters
-    module Fail
-      VERSION = "0.0.1"
-    end
 
     # A reporter based on minitest-emoji by tenderlove
     #   and on minitest-reporters by CapnKernul
